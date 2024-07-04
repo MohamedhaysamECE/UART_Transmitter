@@ -1,0 +1,55 @@
+`timescale 1ns/1ns
+module baud_gen_tb;
+localparam T= 10;
+reg clock,rst;
+reg [1:0] baud_rate;
+wire baud_out;
+
+
+baud_gen DUT(
+    .rst(rst),
+    .clock(clock),
+    .baud_rate(baud_rate),
+    .baud_out(baud_out)
+);
+
+
+// Generate 50 MHz clock == 20ns
+always begin
+       clock = 1'b0;
+       #(T); 
+       clock = 1'b1;
+       #(T);
+end
+
+   initial begin
+	     baud_rate = 2'b00;   // Start with 2400 baud 
+	     rst = 1'b1;
+        #(3*T/2);
+        rst = 1'b0;
+		  
+        #500000
+		  baud_rate = 2'b01;   // 4800 baud
+		  rst = 1'b1;
+      #(3*T/2);
+        rst = 1'b0;
+		  
+	  
+        #210000
+		 baud_rate = 2'b10;   // 9600 baud
+		  rst = 1'b1;
+        #(3*T/2);
+        rst = 1'b0;
+		  
+		  
+        #105000 
+		  baud_rate = 2'b11;   // 19200 baud
+		  rst = 1'b1;
+        #(3*T/2);
+        rst = 1'b0;
+		  
+        #55000	  
+        $stop;
+    end
+
+endmodule
